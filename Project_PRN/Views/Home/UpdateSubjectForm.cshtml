@@ -1,0 +1,30 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+}
+@model Subject
+<form asp-controller="Home" asp-action="UpdateSubject" method="get" id="form1">
+    <div class="form-group">
+        <label for="ID">SubjectID:</label>
+        <input type="text" class="form-control" id="ID" asp-for="Id" value="@Model.Id" readonly />
+    </div>
+    <div class="form-group">
+        <label for="name">Subject Name:</label>
+        <input type="text" class="form-control" id="name" asp-for="Name" value="@Model.Name" required>
+    </div>
+    <div class="form-group">
+        <label for="teacher">Teacher:</label>
+        <input type="text" class="form-control" id="teacher" asp-for="TeacherId" value="@Model.TeacherId">
+    </div>
+    <div class="form-group">
+        <label for="image">Image:</label>
+        <input type="text" class="form-control" id="image" asp-for="Image" value="@Model.Image">
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">Update</button>
+
+</form>
+
+

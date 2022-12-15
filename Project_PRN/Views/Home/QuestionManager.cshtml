@@ -1,0 +1,174 @@
+﻿@model Project_PRN.Models.Subject
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    ViewData["Title"] = "QuestionInSubject";
+}
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <style>
+        body {
+            background-color: #f6f7fb;
+        }
+
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px 20px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            background-color: #f8f8f8;
+            font-size: 16px;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>QuestionInSubject</h1>
+
+    <div>
+        <h4>Subject</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.TeacherId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.TeacherId)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Image)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Image)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> 
+        <a asp-action="Index">Back to List</a>
+        <a asp-controller="Home" asp-action="Import" asp-route-id="@Model?.Id">Import</a>
+    </div>
+    <br />
+    <br />
+    <form asp-controller="Home" asp-action="AddQuestion" method="get" id="form1">
+        <div class="form-group">
+            <label for="name">Question:</label>
+            <textarea type="text" class="form-control" id="name" name="content" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="teacher">Answer:</label>
+            <input type="text" class="form-control" id="teacher" name="answer">
+        </div>
+        <br />
+        <input type="text" name="sid" value="@Model.Id" hidden/>
+        <input type="text" name="sid" value="" hidden />
+        <button type="submit" class="btn btn-primary">Add</button>
+
+    </form>
+    <form asp-controller="Home" asp-action="AddMultiple" method="post" enctype="multipart/form-data">
+        <input type="text" name="id" value="@Model.Id" hidden/>
+        <input type="file" name="file">
+        <input type="submit" value="New Import"/>
+    </form>
+    <form asp-controller="Home" asp-action="ImportExcel" method="post" enctype="multipart/form-data">
+        <input type="text" name="id" value="@Model.Id" hidden />
+        <input type="file" name="postedFile">
+        <input type="submit" value="New Import Excel" />
+    </form>
+    
+    <br />
+    <br />
+    @foreach (var item in ViewBag.question)
+    {
+        <div style="width: 100%; height: fit-content; background-color: white; margin-bottom: 50px;
+                              padding: 20px 20px; border-radius: 8px; display: flex;
+                              box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;" class="row">
+            <div style="width: 60%; border-right: 1px solid #939bb4; margin-right: 10px;" class="col-6">
+                @item.Content
+
+            </div>
+            <div style="width: 20%" class="col-2">
+
+                <p style="margin-left: 10px;"> @item.QuestionAnswer</p>
+
+
+            </div>
+            <div style="width: 20%" class="col-2">
+
+                <a type="button" class="btn btn-info"
+               asp-controller="Home" asp-action="TransmissionQuestion" asp-route-qid="@item.Id"
+               asp-route-subjectid="@Model.Id">
+                    Update
+                </a>
+
+
+            </div>
+            <div style="width: 20%" class="col-2">
+
+                <a type="button" class="btn btn-warning"
+               asp-controller="Home" asp-action="DeleteQuestion" asp-route-qid="@item.Id" asp-route-subjectid="@Model.Id">
+                    Delete
+                </a>
+
+
+            </div>
+
+        </div>
+    }
+
+    <button type="button" class="btn btn-primary" id="btn">Form</button>
+    <div id="form1" >
+        <div style="padding-top: 30px; padding-left: 20%; padding-bottom: 30px; display: flex">
+           
+            <button style="padding: 10px 50px; background-color: #4255ff; color: white; border: none; border-radius: 8px;" id="copy" onclick="myFunction()">Copy text</button>
+        </div>
+        <div style="margin-left: 10%; margin-right: 10% ">
+            <textarea style="resize: none; border-radius: 10px;" cols="100" id="myInput" readonly>@ViewBag.S</textarea>
+        </div>
+    </div>
+
+    <script>
+        function myFunction() {
+            // Get the text field
+            var copyText = document.getElementById("myInput");
+            var copy = document.getElementById("copy");
+            // Select the text field
+            copyText.select();
+
+            // Copy the text inside the text field
+            navigator.clipboard.writeText(copyText.value);
+            copy.innerHTML = "Copied";
+
+        }
+        var tx = document.getElementsByTagName('textarea');
+        for (var i = 0; i < tx.length; i++) {
+            tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+            tx[i].addEventListener("input", OnInput, false);
+        }
+
+        function OnInput(e) {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        }
+        const btn = document.getElementById('btn');
+        btn.addEventListener('click', () => {
+            const form = document.getElementById('form1');
+            if (form.style.display === 'none') {
+                // 👇️ this SHOWS the form
+                form.style.display = 'block';
+            } else {
+                // 👇️ this HIDES the form
+                form.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
